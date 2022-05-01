@@ -35,7 +35,9 @@ describe('UsersController', () => {
     }
     mockAuthService = {
       // signup: () => {},
-      // signin: () => {}
+      signin(email: string, password: string) {
+        return Promise.resolve({ id: 1, email, password } as User)
+      }
     }
 
     const module: TestingModule = await Test.createTestingModule({
@@ -77,5 +79,15 @@ describe('UsersController', () => {
     } catch (e) {
       expect(true).toBe(true)
     }
+  })
+
+  it('signin update session object and returns user', async () => {
+    const session = { userId: 0 }
+    const user = await controller.signin(
+      { email: 'foo@bar.com', password: 'asdf' },
+      session
+    )
+    expect(user.id).toBe(1)
+    expect(session.userId).toBe(1)
   })
 })
